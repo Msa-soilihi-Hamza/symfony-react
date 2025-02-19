@@ -1,0 +1,90 @@
+{
+  "project": {
+    "name": "symfony-react-app",
+    "type": "fullstack",
+    "structure": {
+      "backend": {
+        "framework": "Symfony",
+        "version": "7.2",
+        "root": "./back",
+        "patterns": {
+          "controllers": "src/Controller",
+          "entities": "src/Entity",
+          "repositories": "src/Repository",
+          "migrations": "migrations",
+          "config": "config",
+          "commands": "src/Command"
+        }
+      },
+      "frontend": {
+        "framework": "React",
+        "root": "./front"
+      },
+      "docker": {
+        "root": "./docker",
+        "services": [
+          "nginx",
+          "php",
+          "mysql",
+          "phpmyadmin",
+          "frontend"
+        ]
+      }
+    },
+    "dependencies": {
+      "backend": {
+        "php": ">=8.2",
+        "required_extensions": [
+          "ctype",
+          "iconv",
+          "pdo_mysql",
+          "mbstring",
+          "exif",
+          "pcntl",
+          "bcmath",
+          "gd",
+          "intl",
+          "zip"
+        ],
+        "symfony_bundles": [
+          "symfony/framework-bundle",
+          "doctrine/doctrine-bundle",
+          "symfony/security-bundle",
+          "doctrine/doctrine-migrations-bundle",
+          "nelmio/cors-bundle"
+        ]
+      },
+      "infrastructure": {
+        "nginx": "stable-alpine",
+        "php-fpm": "8.3",
+        "mysql": "8.0",
+        "phpmyadmin": "latest"
+      }
+    },
+    "configuration_files": {
+      "docker": [
+        "docker-compose.yml",
+        "docker/php/Dockerfile",
+        "docker/nginx/default.conf"
+      ],
+      "symfony": [
+        "back/config/bundles.php",
+        "back/config/services.yaml",
+        "back/config/packages/*.yaml"
+      ]
+    }
+  },
+  "development": {
+    "ports": {
+      "nginx": 80,
+      "php-fpm": 9000,
+      "mysql": 3306,
+      "phpmyadmin": 8080,
+      "frontend": 3000
+    },
+    "environment": {
+      "type": "dockerized",
+      "network": "app-network"
+    }
+  }
+} 
