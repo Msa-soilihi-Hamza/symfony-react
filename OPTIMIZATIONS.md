@@ -3,14 +3,6 @@
 ## Priorité Haute
 
 ### 1. Configuration du Cache Redis
-- [ ] Ajouter Redis au docker-compose.yml :
-yaml
-redis:
-image: redis:alpine
-ports:
-"6379:6379"
-networks:
-app-network
 - [ ] Configurer le cache dans `config/packages/cache.yaml` :
 yaml
 framework:

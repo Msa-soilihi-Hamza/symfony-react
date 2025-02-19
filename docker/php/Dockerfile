@@ -26,8 +26,17 @@ RUN docker-php-ext-install \
     intl \
     zip
 
+# Install APCu
+RUN pecl install apcu && \
+    docker-php-ext-enable apcu
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Configure APCu
+RUN echo "apc.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini \
+    && echo "apc.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini \
+    && echo "apc.shm_size=256M" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini
 
 WORKDIR /var/www/symfony
 

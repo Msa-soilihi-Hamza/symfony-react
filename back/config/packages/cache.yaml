@@ -1,7 +1,28 @@
 framework:
     cache:
         # Unique name of your app: used to compute stable namespaces for cache keys.
-        #prefix_seed: your_vendor_name/app_name
+        prefix_seed: symfony_react_app
+
+        # Using APCu as the default cache
+        app: cache.adapter.apcu
+        system: cache.adapter.system
+        
+        # Définition des pools de cache spécifiques
+        pools:
+            # Pool pour les données fréquemment utilisées
+            app.cache.common:
+                adapter: cache.adapter.apcu
+                default_lifetime: 3600
+            
+            # Pool pour les données de l'API
+            app.cache.api:
+                adapter: cache.adapter.apcu
+                default_lifetime: 600
+                
+            # Pool pour les données statiques
+            app.cache.static:
+                adapter: cache.adapter.apcu
+                default_lifetime: 86400
 
         # The "app" cache stores to the filesystem by default.
         # The data in this cache should persist between deploys.
