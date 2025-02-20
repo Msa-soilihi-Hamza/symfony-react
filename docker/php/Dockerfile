@@ -40,6 +40,32 @@ RUN echo "apc.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini
 
 WORKDIR /var/www/symfony
 
+# Copy composer files first
+COPY ./back/composer.json ./back/composer.lock ./
+
+# Set permissions for composer
+RUN chown -R www-data:www-data . \
+    && chmod -R 775 .
+
+# Install dependencies as www-data
+USER www-data
+RUN composer install --prefer-dist --no-dev --no-scripts --no-progress
+
+# Copy the rest of the application
+USER root
+COPY ./back .
+
+# Final permissions
+RUN chown -R www-data:www-data . \
+    && chmod -R 775 . \
+    && chmod -R 777 var
+
+# Switch back to www-data
+USER www-data
+
+# Generate optimized autoloader
+RUN composer dump-autoload --optimize --classmap-authoritative
+
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"] 

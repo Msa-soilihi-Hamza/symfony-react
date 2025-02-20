@@ -7,7 +7,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./back:/var/www/symfony
+      - ./back:/var/www/symfony:ro
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php
@@ -17,11 +17,17 @@ services:
 
   php:
     build:
-      context: ./docker/php
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./docker/php/Dockerfile
     container_name: php-symfony
+    user: www-data
     volumes:
-      - ./back:/var/www/symfony
+      - ./back/src:/var/www/symfony/src:ro
+      - ./back/templates:/var/www/symfony/templates:ro
+      - ./back/config:/var/www/symfony/config:ro
+      - ./back/public:/var/www/symfony/public:ro
+      - ./back/migrations:/var/www/symfony/migrations:ro
+      - ./back/var:/var/www/symfony/var:rw
     depends_on:
       - database
     networks:
