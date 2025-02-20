@@ -48,10 +48,11 @@ services:
     ports:
       - "8080:80"
     environment:
-      PMA_HOST: database
-      PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: root
-      UPLOAD_LIMIT: 50M
+      - PMA_HOST=database
+      - PMA_USER=symfony
+      - PMA_PASSWORD=symfony
+      - MYSQL_ROOT_PASSWORD=root
+      - UPLOAD_LIMIT=50M
     depends_on:
       - database
     networks:
