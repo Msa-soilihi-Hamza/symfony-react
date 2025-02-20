@@ -17,27 +17,21 @@ security:
             pattern: ^/api
             lazy: true
             provider: app_user_provider
+            custom_authenticators:
+                - App\Security\JwtAuthenticator
             json_login:
                 check_path: api_login
                 username_path: username
                 password_path: password
+            stateless: true
             logout:
                 path: api_logout
-                clear_site_data: ['*']
-            custom_authenticators:
-                - App\Security\CorsAuthenticator
-            
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/me, roles: IS_AUTHENTICATED }
+        - { path: ^/api/me, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/admin, roles: ROLE_ADMIN }
 
 when@test:

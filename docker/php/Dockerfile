@@ -49,7 +49,7 @@ RUN chown -R www-data:www-data . \
 
 # Install dependencies as www-data
 USER www-data
-RUN composer install --prefer-dist --no-dev --no-scripts --no-progress
+RUN composer install --prefer-dist --no-scripts --no-progress
 
 # Copy the rest of the application
 USER root
@@ -62,6 +62,9 @@ RUN chown -R www-data:www-data . \
 
 # Switch back to www-data
 USER www-data
+
+# Install JWT package
+RUN composer require firebase/php-jwt
 
 # Generate optimized autoloader
 RUN composer dump-autoload --optimize --classmap-authoritative
