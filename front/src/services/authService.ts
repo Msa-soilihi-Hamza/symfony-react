@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost/api';
+const API_URL = 'http://localhost:80/api';
 
 export interface LoginResponse {
     user: string;
@@ -50,15 +50,33 @@ export const login = async (username: string, password: string): Promise<LoginRe
 };
 
 export const logout = async (): Promise<void> => {
+    const token = getAuthToken();
+    if (!token) {
+        removeAuthToken();
+        return;
+    }
+
     try {
         const response = await fetch(`${API_URL}/logout`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({})
         });
 
         if (!response.ok) {
-            throw new Error('Échec de la déconnexion');
+            console.error('Erreur de déconnexion:', response.status, response.statusText);
+            const error = await response.json().catch(() => ({ message: `Erreur HTTP: ${response.status}` }));
+            throw new Error(error.message || 'Échec de la déconnexion');
         }
+
+        await response.json();
+    } catch (error) {
+        console.error('Erreur lors de la déconnexion:', error);
+        throw error;
     } finally {
         removeAuthToken();
     }

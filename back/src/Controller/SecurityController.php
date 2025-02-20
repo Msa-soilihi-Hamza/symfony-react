@@ -50,8 +50,18 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/logout', name: 'api_logout', methods: ['POST'])]
-    public function logout(): JsonResponse
+    public function logout(Request $request): JsonResponse
     {
-        return $this->json(['message' => 'Déconnexion réussie']);
+        // Récupérer le token depuis le header Authorization
+        $authHeader = $request->headers->get('Authorization');
+        if ($authHeader) {
+            // Ici vous pourriez ajouter le token à une liste noire si nécessaire
+            // $this->jwtService->blacklistToken(str_replace('Bearer ', '', $authHeader));
+        }
+
+        return $this->json([
+            'message' => 'Déconnexion réussie',
+            'logout' => true
+        ], Response::HTTP_OK);
     }
 }
